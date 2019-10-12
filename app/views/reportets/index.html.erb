@@ -1,0 +1,210 @@
+
+<p id="notice"><%= notice %></p>
+
+<h1 style="color:blue;">Cuadre de ventas</h1>
+<h2>Desde:  <%= @dia1.to_s %> </h2>
+<h2>Hasta:  <%= @dia2.to_s %> </h2>
+<h2>Sucursal:  <%= Localidadt.last.sucursal %> </h2>
+
+<h2>Total IN: $ <%= number_to_currency(@total_in , :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>  </h2>
+
+<h2>Total OUT: $ <%= number_to_currency(@total_out, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>  </h2>
+
+<h2>Total NET: $ <%= number_to_currency(@total_net, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>  </h2>
+
+
+<h2 style="color:blue;" >Balance Total: $ <%= number_to_currency(( @total_net ), :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %> </h2>
+
+
+
+<button class="button" type="button" onclick="PrintElem('div_a_imprimir')" style="color:white;background-color:blue; height:30px;">  Imprimir  </button> 
+
+
+
+<h4>Consultado el: <%= Time.now.strftime("%d/%m/%Y (%H:%M:%S)") %> </h4>
+
+
+ <h4> <%= link_to 'inicio', root_path %> </h4>
+
+
+ <% if @array_consultas_transacciones %> <!-- Esto para evitar error cuando sea nil en un rango de fecha posible. ok. -->
+
+   <h3 id="conteo_reciente">Detalles de envios (creditos):</h3>
+   
+   <div id="tabla_recientes" class="tabla_transacciones">
+
+      <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Maquina</th>
+              <th>TipoTx</th>
+              <th>Cantidad</th>  
+              <th>Status</th>
+              <th colspan="3"></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @array_consultas_transacciones.each do |transaccionest| %>
+              <tr>
+                <td><%= transaccionest.created_at.to_s.split(" -")[0] %></td>
+                <td><%= transaccionest.maquinat.descripcion %></td>
+                <td><%= transaccionest.tipotransaccion.to_s %></td>
+                <td><%= transaccionest.cantidad %></td>
+                <td><%= transaccionest.status %></td>
+                
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+    
+
+    <% if @array_consultas_postransacciones %> 
+
+     <h3> Detalles de pagos (debitos):</h3>
+   
+   
+      <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Maquina</th>
+              <th>TipoTx</th>
+              <th>Cantidad</th>  
+              <th>Status</th>
+              <th colspan="3"></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @array_consultas_postransacciones.each do |postransaccionest| %>     
+              <tr>
+                <td><%= postransaccionest.created_at.to_s.split(" -")[0] %></td>
+                <td><%= Maquinat.where(:serial => postransaccionest.serial).first.descripcion %></td>
+                <td>*debito*</td>
+
+                <%if postransaccionest.cantidad.nil?%>
+                  <td> <%= "*" %> </td>
+                  <%else%>
+                  <td> <%= postransaccionest.cantidad.split(".")[0] %> </td>
+                <%end%>
+
+                <%if postransaccionest.cantidad.nil?%>
+                  <td> <%= "*" %> </td>
+                  <%else%>
+                  <td> <%= postransaccionest.cantidad.split("..")[1] %> </td>
+                <%end%>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+    <% end %> <!-- end del if condition del postransaccionest ok-->
+
+    </div>
+
+
+<button class="button" type="button" onclick="PrintElemConTabla('div_a_imprimir')" style="color:white;background-color:blue; height:35px;">  Imprimir con Tabla  </button> 
+
+<% end %>
+
+
+<h3>Consultado el: <%= Time.now.strftime("%d/%m/%Y (%H:%M:%S)") %> </h3>
+
+
+<div id="div_a_imprimir" style="display:none ">
+
+    <h2> <%=Localidadt.last.sucursal.to_s.upcase %> </h2>  
+    <h4> Cuadre de Ventas Maquinas. </h4>
+    <h4> Del <%=@dia1  %> al <%= @dia2 %> </h4>
+
+
+    <p>Entrada Global (IN): $ <%= number_to_currency(@total_in , :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>  </p>
+
+    <p>Salida Global (OUT): $ <%= number_to_currency(@total_out, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>  </p>
+
+    <h3>Total NETO: $ <%= number_to_currency(@total_net, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>  </h3>
+
+    <h4>Consultado el: <%= Time.now.strftime("%d/%m/%Y (%H:%M:%S)") %> </h4>
+
+    <p>___________________________________</p>
+
+
+    <h3>Detallado x maquina:</h3>
+
+      <% @ids_maquinas_activas.each do |id_maquina|  %> 
+
+          <h3><%= Maquinat.find(id_maquina).descripcion %></h3>
+
+             <% @total_in = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "credito", :status => "ok").sum(:cantidad)  %>
+
+             <% @total_out = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "debito").sum(:cantidad)  %>
+
+             <% @total_net = @total_in.to_i - @total_out.to_i   %>
+
+          <p>IN: $ <%= number_to_currency(@total_in , :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %> | OUT: $ <%= number_to_currency(@total_out, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>   </p>
+          
+          <% @prociento = 0 %>
+          <% # Evitar error de division/0 ok. %>
+          <%if @total_in.to_i > 0 %>
+              <% @prociento = ( (@total_net.to_i / @total_in.to_i )*100 ).round%>
+          <%end%>
+
+          <p>NETO: $ <%= number_to_currency(@total_net, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>  ( <%= @prociento %> %)  </p>
+
+          <p>___________________</p>
+
+      <% end %>
+
+    <p>Kollector V1.0</p>
+
+</div>
+
+
+
+<!-- ---------------------------------- -->
+
+<script type="text/javascript">
+  
+  function PrintElem(elem)
+  {
+      var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+      mywindow.document.write('<html><head><title>' + document.title  + '</title>');
+      mywindow.document.write('</head><body >');
+    //  mywindow.document.write('<h1>' + document.title  + '</h1>');
+      mywindow.document.write(document.getElementById(elem).innerHTML);
+      mywindow.document.write('</body></html>');
+
+      mywindow.document.close(); // necessary for IE >= 10
+      mywindow.focus(); // necessary for IE >= 10*/
+
+      mywindow.print();
+      mywindow.close();
+
+      return true;
+  }  
+
+
+
+  function PrintElemConTabla(elem)
+  {
+      var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+      mywindow.document.write('<html><head><title>' + document.title  + '</title>');
+      mywindow.document.write('</head><body >');
+    //  mywindow.document.write('<h1>' + document.title  + '</h1>');
+      mywindow.document.write(document.getElementById(elem).innerHTML);
+      mywindow.document.write(document.getElementById('tabla_recientes').innerHTML);
+      mywindow.document.write('</body></html>');
+
+      mywindow.document.close(); // necessary for IE >= 10
+      mywindow.focus(); // necessary for IE >= 10*/
+
+      mywindow.print();
+      mywindow.close();
+
+      return true;
+  }  
+
+
+</script>

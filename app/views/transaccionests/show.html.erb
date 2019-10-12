@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Maquinat:</strong>
+  <%= @transaccionest.maquinat.descripcion %>
+</p>
+
+<p>
+  <strong>Tipotransaccion:</strong>
+  <%= @transaccionest.tipotransaccion %>
+</p>
+
+<p>
+  <strong>Cantidad:</strong>
+  <%= @transaccionest.cantidad %>
+</p>
+
+<p>
+  <strong>Comando:</strong>
+  <%= @transaccionest.comando %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @transaccionest.status %>
+</p>
+
+<%= link_to 'Edit', edit_transaccionest_path(@transaccionest) %> |
+<%= link_to 'Back', transaccionests_path %>

@@ -1,0 +1,55 @@
+
+*resolver tabla transaccioens
+*resolver reportes el out y el net real
+*ver lo del posb hdd old klk y/n murano
+*board y pg serial billetero klk. comandos. 
+*arduino ethernet shields comprar 5 dolares klk, db9 serial comprar y ver si estamos listos a nivel de hw para la 1ra banca.
+*rails production setup y stick to pc serial klk anticlone klk. adn 1yr licensed and priced.
+
+
+
+
+1)VERIFICAR EL PROBLEMA DE QUE SE QUEDA REENVIANDO CREDITO ANTERIOR SIEMPRE CUANDO LINK DOWN RULETAS Y POG ALGORITMO.  OJO. TED.
+
+2) ok SI ESTA ROJO QUE NO PERMITA ENVIAR CREDITO , AUNQUE SABEMOS QUE EL SISTEMA LO PONE NULL, PERO UN REDIRECT MQXX SELECCIONADA ESTA ROJA OFFLINE. OK. SIMPLE.
+
+3)generar un scaffold con mixtransaccionest para mezclar los credit/debit en la pantalla de venta. >> trabajar despacio esta parte en el save del controller tambien. klk. params?
+
+
+4)la suma del balance de venta de la empleada sera la resta de las dos tablas clasicas de la fecha actual. El cierre es las 11:59:59 o sea venta hasta la medianoche. ok bancas ted.
+
+mostrar los detalles de transacciones mixtas en los reportes x rango de fechas.
+
+Restar  real en OUT reportes, sale en CERO. Ve ej.:
+Total IN: $ 9,350
+Total OUT: $ 0  <------------------ CERO.
+Total NET: $ 9,350 
+
+
+Validar pedidos de arduino ethernet? 3?
+REALIZAR PAYMETS. OJO.
+
+REVIASAR PROBLEMAS EN LA JOEL
+CUADRAR SGSPORTS.
+NESTOR ASK SG-39 BOARD PRUEBA KLK?
+ENCAPSULAR APLICACION EN POS NESTOR HDD KLK. OJO.
+PEDIDO DE BOARD MASTERS RULETAS INVENTARIO.
+
+BR DEPOSIT?
+
+WU EL MARTES
+LS OJO. OUTSIDE PAIS.
+YEM KLK CALL CENTER GO KEVIN KLK. MEJORAS: PONCHE, FIREWALL INTEGRADOR, NEDWIN KLK.
+ACRUZ KOLLECTOR Y PIZ READY HABLAREMOS. JF, CHELO, SGS RUTAS OJO.
+
+SG-34,66,39 CUADRARLAS . OJO VIRGINIA !!! CUADRES KLK. POR FAVOR. PM NOO. 9.30AM
+SENASA U OTRO SEGUNRO HERE KLK.
+REGARCAS O GALLOS 1ST? INET MONCITO KLK.
+
+PRINTER ENABLE TINTA KLK
+CORNIERL KLK. TEST CLIENT. OJO. RNC PERSONAL O COMPUCENTRO RD.
+
+
+
+
+

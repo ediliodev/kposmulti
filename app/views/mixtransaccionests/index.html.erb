@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Mixtransaccionests</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Maquinat</th>
+      <th>Tipotransaccion</th>
+      <th>Cantidad</th>
+      <th>Comando</th>
+      <th>Status</th>
+      <th>Descripcion</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @mixtransaccionests.each do |mixtransaccionest| %>
+      <tr>
+        <td><%= mixtransaccionest.maquinat %></td>
+        <td><%= mixtransaccionest.tipotransaccion %></td>
+        <td><%= mixtransaccionest.cantidad %></td>
+        <td><%= mixtransaccionest.comando %></td>
+        <td><%= mixtransaccionest.status %></td>
+        <td><%= mixtransaccionest.descripcion %></td>
+        <td><%= link_to 'Show', mixtransaccionest %></td>
+        <td><%= link_to 'Edit', edit_mixtransaccionest_path(mixtransaccionest) %></td>
+        <td><%= link_to 'Destroy', mixtransaccionest, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Mixtransaccionest', new_mixtransaccionest_path %>

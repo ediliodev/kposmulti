@@ -1,0 +1,28 @@
+<%= form_with(model: reportet, local: true) do |form| %>
+  <% if reportet.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(reportet.errors.count, "error") %> prohibited this reportet from being saved:</h2>
+
+      <ul>
+      <% reportet.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :desde %>
+    <%= form.date_select :desde, id: :reportet_desde, :order => [:day, :month, :year] %>
+
+  </div>
+
+  <div class="field">
+    <%= form.label :hasta %>
+    <%= form.date_select :hasta, id: :reportet_hasta, :order => [:day, :month, :year] %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Consultar" %>
+  </div>
+<% end %>

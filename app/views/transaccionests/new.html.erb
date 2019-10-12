@@ -1,0 +1,332 @@
+
+<h1>Kollector Admin 1.0</h1>
+<h2> <%= render 'reloj'  %> </h2> 
+<h2>Suc: <%= @sucursal %></h2>
+
+<h3>************************************************</h3>
+
+<div id="monitor" class="monitor_class">
+
+	<% @kit_color_verde_style = "" # inicializo variablde fuera del each loop ok. %>
+	  <table>
+
+	      <tbody>
+	      	<tr>
+	        <% @kit_maquinats.each do |transaccionest| %>
+
+	         <td>
+	          <%if @kit_maquinats_verde.include? transaccionest.id  %>
+	           <button class="button" type="button" style="color:white;background-color:green; height:35px;">  <%= transaccionest.descripcion %>  </button> 
+
+	           <% else  %>
+	           
+	           <button class="button" type="button" style="color:white;background-color:red; height:35px;">  <%= transaccionest.descripcion %>  </button> 
+	          <%end%>
+
+	         </td>
+
+	        <% end %>
+	          </tr>
+	      </tbody>
+	    </table>
+</div>
+
+<h2>Enviar Creditos($)</h2>
+
+
+<!-- 
+
+	<% # @kit_color_verde_style # =  "class=\"button\" type=\"button\" style=\"color:white;background-color:green; height:35px;\"  onclick= cash_modifySend()> "              #{}"style=\"color:white;background-color:green; height:35px;\"" %>
+
+
+<div class="seccion_monitoreo">
+   <button class="button" type="button" style="color:white;background-color:green; height:35px;" onclick= cash_modifySend('05')>1PoG</button> 
+   <button class="button" type="button" onclick= cash_modifySend('05')>2</button> 
+   <button class="button" type="button" onclick= cash_modifySend('05')>3</button> 
+   <button class="button" type="button" onclick= cash_modifySend('05')>4</button> 
+   <button class="button" type="button" onclick= cash_modifySend('05')>5</button> 
+   <button class="button" type="button" onclick= cash_modifySend('05')>6</button> 
+   <button class="button" type="button" onclick= cash_modifySend('05')>7</button> 
+   <button class="button" type="button" onclick= cash_modifySend('05')>8</button> 
+   <button class="button" type="button" onclick= cash_modifySend('05')>9</button> 
+</div>
+
+-->
+
+
+
+<%= render 'form2', transaccionest: @transaccionest %>
+
+<!-- Esto para indicar mensane de error cuando la mq esten en rojo. No credit sent -->
+<p id="notice"><%= notice %></p>
+
+
+<!-- El grupo de botones de creditos esta/lo puse dentro del form2.html para fines de mejorar el layout ok. -->
+
+<h4>_______________________________________________________________</h4>
+
+
+<h3>
+
+<%= link_to 'Reportes', new_reportet_path %>
+<%= link_to '- Maquinas -', maquinats_path %>
+<%= link_to 'Sucursal', localidadts_path %>
+    
+
+</h3>
+
+<h3 style="color:green;" > Venta de hoy:
+( IN: $ <%= ActionController::Base.helpers.number_to_currency(@total_in, :unit => "", :delimiter => ",", :precision => 0, :separator => ".")  %>)...(OUT: $ <%= ActionController::Base.helpers.number_to_currency(@total_out, :unit => "", :delimiter => ",", :precision => 0, :separator => ".")  %>).....(NETO: $ <%= ActionController::Base.helpers.number_to_currency(@neto_hoy, :unit => "", :delimiter => ",", :precision => 0, :separator => ".")  %>)
+</h3>
+
+
+<h3 id="conteo_reciente">Reciente: </h3>
+
+<div id="tabla_recientes" class="tabla_transacciones">
+ 
+ <%if not @lastly_transaccionests.empty? %>
+   <h3>Envios Recientes (creditos): </h3>  
+	<table>
+		<thead>
+			<tr>
+			  <th>Fecha</th>
+			  <th>Maquina</th>
+			  <th>TipoTx</th>
+			  <th>Cantidad</th>  
+			  <th>Status</th>
+			 <!--  <th>Print</th> -->
+
+			</tr>
+		</thead>
+
+		<tbody>
+		<% @lastly_transaccionests.each do |transaccionest| %>
+		  <tr>
+		  	<td><%= transaccionest.created_at.to_s.split(" -")[0] %></td>
+		    <td><%= transaccionest.maquinat.descripcion %></td>
+		    <td>* <%= transaccionest.tipotransaccion%> *</td>
+		    <td><%= transaccionest.cantidad %></td>
+		    <td><%= transaccionest.status %></td>
+		<!-- 
+		    <td><%  @line_tx_with_id = 'line_tx_with_id_' + transaccionest.id.to_s %>
+				<button class="button" type="button"  style="color:white;background-color:blue; height:35px;"> Print  </button> 
+		    </td>
+		-->
+		    
+		  </tr>
+		<% end %>
+		</tbody>
+	</table>
+
+<%end%>
+
+<%if not @lastly_postransaccionests.empty? %>
+
+ <h3>Pagos Recientes (debitos): </h3>  
+	<table>
+		<thead>
+			<tr>
+			  <th>Fecha</th>
+			  <th>Maquina</th>
+			  <th>TipoTx</th>
+			  <th>Cantidad</th>  
+			  <th>Status</th>
+			 <!--  <th>Print</th> -->
+
+			</tr>
+		</thead>
+
+		<tbody>
+		<% @lastly_postransaccionests.each do |postransaccionest| %>
+		  <tr>
+		  	<td><%= postransaccionest.created_at.to_s.split(" -")[0] %></td>
+		    <td><%= Maquinat.where(:serial => postransaccionest.serial).first.descripcion %></td>
+		    <td>*debito*</td>
+
+		    <%if postransaccionest.cantidad.nil?%>
+		    	<td> <%= "*" %> </td>
+		    	<%else%>
+		    	<td> <%= postransaccionest.cantidad.split(".")[0] %> </td>
+
+		    <%end%>
+
+		    <%if postransaccionest.cantidad.nil?%>
+		    	<td> <%= "*" %> </td>
+		    	<%else%>
+		    	<td> <%= postransaccionest.cantidad.split("..")[1] %> </td>
+
+		    <%end%>
+		    
+			
+		  </tr>
+		<% end %>
+		</tbody>
+	</table>
+
+<%end%>
+	
+</div>
+  
+ <!-- Mostrar el boton imprimir solo si hay data que imprimir de las transacciones realizadas -->
+<%if (not @lastly_transaccionests.empty?) || (not @lastly_postransaccionests.empty?) %>
+
+<button class="button" type="button" onclick="PrintElem('tabla_recientes')" style="color:white;background-color:blue; height:25px;">  Imprimir</button> 
+
+<% end %>
+<!-- Esta seccion low level now and for future development only :
+
+<div class="klk3">
+   <button class="button" type="button" onclick= cash_modifySend('05')>Sup. Key Cicle</button> 
+   <button class="button" type="button" onclick= cash_modifySend('05')>Sup. KeyON</button> 
+   <button class="button" type="button" onclick= cash_modifySend('05')>Sup. KeyOFF</button> 
+</div>
+</br>
+
+<div class="klk4">
+   <button class="button" type="button" onclick= cash_modifySend('05')>Men. Key Cicle</button> 
+   <button class="button" type="button" onclick= cash_modifySend('05')>Men. KeyON</button> 
+   <button class="button" type="button" onclick= cash_modifySend('05')>Men. KeyOFF</button>     
+</div>
+-->
+
+
+
+<%# link_to 'Back', transaccionests_path %>
+
+<h4>_______________________________________________________________</h4>
+
+<h4>	Kollector Admin v1.0 - support email: edilio7@hotmail.com</h4>
+<h4>All Rights Reserved.</h4>
+
+<script type="text/javascript">
+
+
+	function cash_modifySend(cash){
+		document.getElementById('transaccionest_cantidad').value = cash;
+		document.getElementById('transaccionest_tipotransaccion').value = "credito";	
+		document.getElementById('transaccionest_comando').value = "@cash" + cash + "^";	
+		document.getElementById('transaccionest_status').value = "pendiente";	
+	}
+
+	function reset_modifySend(cash){
+		document.getElementById('transaccionest_cantidad').value = "";
+		document.getElementById('transaccionest_tipotransaccion').value = "";	
+		document.getElementById('transaccionest_comando').value = "";	
+		document.getElementById('transaccionest_status').value = "";	
+	}
+
+</script>
+
+
+
+
+<script type="text/javascript">
+	function limpiar_valores(){
+		document.getElementById('transaccionest_cantidad').value = "sdsf";	
+	}
+  
+</script>
+
+
+
+<body onclick="pararconteo()" >
+
+<body onload="limpiar_valores()">
+
+	<!-- Limpiar valores de manera manual onload no esta trabajando, necesario y provisional -->
+
+
+
+<script type="text/javascript">
+	document.getElementById('transaccionest_tipotransaccion').value = "";	
+	document.getElementById('transaccionest_cantidad').value = "";	
+	document.getElementById('transaccionest_comando').value = "";	
+	document.getElementById('transaccionest_status').value = "";	
+</script>
+
+
+<!-- Configuracion del counter monitor and page ACT -->
+
+
+<script type="text/javascript">
+ var sec = 20;
+ //alert("ok1");
+
+ var inka = setInterval(timertoreload, 1000);
+
+
+
+
+function timertoreload() {
+  //alert("klk5000");
+  document.getElementById("conteo_reciente").innerHTML = "Reciente: " + sec + "s";
+  if (sec > 0){
+
+    sec = sec - 1;
+
+  }
+
+  if (sec < 1){
+
+     sec = 25;
+
+     location.reload(); 
+
+  }
+
+
+}
+
+
+
+function pararconteo() {
+
+  clearInterval(inka);
+
+  sec = 25;
+
+   inka = setInterval(timertoreload, 1000);
+
+}
+
+
+ 
+</script>
+
+
+
+
+<!-- -----Funcion para impresion de transacciones de la tabla ok ------ -->
+
+<script type="text/javascript">
+  
+  function PrintElem(elem)
+  {
+      var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+      mywindow.document.write('<html><head><title>' + document.title  + '</title>');
+      mywindow.document.write('</head><body > <h2>');
+    //  mywindow.document.write('<h1>' + document.title  + '</h1>');
+      mywindow.document.write(document.getElementById(elem).innerHTML);
+      mywindow.document.write('</h2></body></html>');
+
+      mywindow.document.close(); // necessary for IE >= 10
+      mywindow.focus(); // necessary for IE >= 10*/
+
+      mywindow.print();
+      mywindow.close();
+
+      return true;
+  }  
+
+</script>
+
+
+
+
+
+
+
+
+
+
+

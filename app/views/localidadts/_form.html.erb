@@ -1,0 +1,34 @@
+<%= form_with(model: localidadt, local: true) do |form| %>
+  <% if localidadt.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(localidadt.errors.count, "error") %> prohibited this localidadt from being saved:</h2>
+
+      <ul>
+      <% localidadt.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :consorcio %>
+    <%= form.text_field :consorcio, id: :localidadt_consorcio %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sucursal %>
+    <%= form.text_field :sucursal, id: :localidadt_sucursal %>
+  </div>
+
+  <div class="field">
+    <%= form.label :direccion %>
+    <%= form.text_field :direccion, id: :localidadt_direccion %>
+  </div>
+
+</br>
+
+  <div class="actions">
+    <%= form.submit "Actualizar" %>
+  </div>
+<% end %>

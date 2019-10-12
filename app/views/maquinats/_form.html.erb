@@ -1,0 +1,51 @@
+<%= form_with(model: maquinat, local: true) do |form| %>
+  <% if maquinat.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(maquinat.errors.count, "error") %> prohibited this maquinat from being saved:</h2>
+
+      <ul>
+      <% maquinat.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :tipomaquinat_id %>
+    <%= form.select :tipomaquinat_id, Tipomaquinat.order(:tipomaquina).collect{ |item|  [ " --> " + item.tipomaquina , item.id ] } %> 
+   
+  </div>
+
+   
+
+
+  <div class="field">
+    <%= form.label "Descripcion y # Maquina" %>
+    <%= form.text_field :descripcion, id: :maquinat_descripcion %>
+  </div>
+
+   <div class="field">
+    <%= form.label "Serial" %>
+    <%= form.text_field :serial, id: :maquinat_serial %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Activa" %>
+    <% form.text_field :activa, id: :maquinat_activa %>
+    <%= form.select :activa, ["si", "no"].collect{ |item|  [ item , item ] } %> 
+
+  </div>
+
+<!--
+  <div class="field">
+    <% form.label "LastSeen" %>
+    <%= form.text_field :lastseen, id: :maquinat_lastseen %>
+  </div>
+-->
+</br>
+
+  <div class="actions">
+    <%= form.submit "Actualizar"%>
+  </div>
+<% end %>

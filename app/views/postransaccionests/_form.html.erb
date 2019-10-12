@@ -1,0 +1,27 @@
+<%= form_with(model: postransaccionest, local: true) do |form| %>
+  <% if postransaccionest.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(postransaccionest.errors.count, "error") %> prohibited this postransaccionest from being saved:</h2>
+
+      <ul>
+      <% postransaccionest.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :cantidad %>
+    <%= form.text_field :cantidad, id: :postransaccionest_cantidad %>
+  </div>
+
+  <div class="field">
+    <%= form.label :serial %>
+    <%= form.text_field :serial, id: :postransaccionest_serial %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

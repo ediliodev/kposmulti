@@ -1,0 +1,2 @@
+class Tipomaquinat < ApplicationRecord
+end

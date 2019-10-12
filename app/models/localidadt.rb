@@ -1,0 +1,2 @@
+class Localidadt < ApplicationRecord
+end

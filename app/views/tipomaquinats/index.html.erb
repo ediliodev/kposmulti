@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Tipomaquinats</h1>
+<h2>Valor de dalton es:  <%= @dalton %></h2>
+<table>
+  <thead>
+    <tr>
+      <th>Tipomaquina</th>
+      <th>Descripcion</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @tipomaquinats.each do |tipomaquinat| %>
+      <tr>
+        <td><%= tipomaquinat.tipomaquina %></td>
+        <td><%= tipomaquinat.descripcion %></td>
+        <td><%= link_to 'Show', tipomaquinat %></td>
+        <td><%= link_to 'Edit', edit_tipomaquinat_path(tipomaquinat) %></td>
+        <td><%= link_to 'Destroy', tipomaquinat, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Tipomaquinat', new_tipomaquinat_path %>

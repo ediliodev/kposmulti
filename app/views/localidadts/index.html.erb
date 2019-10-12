@@ -1,0 +1,34 @@
+<!-- 
+   <p id="notice"><%= notice %></p>
+-->
+
+<h1>Datos de la Localidad:</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Consorcio</th>
+      <th>Sucursal</th>
+      <th>Direccion</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @localidadts.each do |localidadt| %>
+      <tr>
+        <td><%= localidadt.consorcio %></td>
+        <td><%= localidadt.sucursal %></td>
+        <td><%= localidadt.direccion %></td>
+        <td><%# link_to 'Show', localidadt %></td>
+        <td><%= link_to 'Editar', edit_localidadt_path(localidadt) %></td>
+        <td><%# link_to 'Destroy', localidadt, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%# link_to 'New Localidadt', new_localidadt_path %>
+

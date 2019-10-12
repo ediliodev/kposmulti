@@ -1,0 +1,2 @@
+class Reportet < ApplicationRecord
+end

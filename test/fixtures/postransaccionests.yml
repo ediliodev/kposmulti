@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cantidad: MyString
+  serial: MyString
+
+two:
+  cantidad: MyString
+  serial: MyString

@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Tipomaquinat:</strong>
+  <%= @maquinat.tipomaquinat.tipomaquina %>
+</p>
+
+<p>
+  <strong>Descripcion:</strong>
+  <%= @maquinat.descripcion %>
+</p>
+
+<p>
+  <strong>Serial:</strong>
+  <%= @maquinat.serial %>
+</p>
+
+<%= link_to 'Edit', edit_maquinat_path(@maquinat) %> |
+<%= link_to 'Back', maquinats_path %>

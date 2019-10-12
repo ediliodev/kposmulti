@@ -1,0 +1,47 @@
+<%= form_with(model: mixtransaccionest, local: true) do |form| %>
+  <% if mixtransaccionest.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(mixtransaccionest.errors.count, "error") %> prohibited this mixtransaccionest from being saved:</h2>
+
+      <ul>
+      <% mixtransaccionest.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :maquinat_id %>
+    <%= form.text_field :maquinat_id, id: :mixtransaccionest_maquinat_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tipotransaccion %>
+    <%= form.text_field :tipotransaccion, id: :mixtransaccionest_tipotransaccion %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cantidad %>
+    <%= form.text_field :cantidad, id: :mixtransaccionest_cantidad %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comando %>
+    <%= form.text_field :comando, id: :mixtransaccionest_comando %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.text_field :status, id: :mixtransaccionest_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :descripcion %>
+    <%= form.text_field :descripcion, id: :mixtransaccionest_descripcion %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,2 @@
+class Postransaccionest < ApplicationRecord
+end

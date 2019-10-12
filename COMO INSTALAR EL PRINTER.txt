@@ -1,0 +1,21 @@
+Para instalar el printer epson TM-T20II en ubuntu 16.04 partimos del siguiente link:
+
+https://askubuntu.com/questions/1026572/installing-printer-driver-for-epson-tm-t20ii-on-ubuntu-16-04/1027048
+
+1 -conectamos el printer con el cable USB
+2- Instalamos el driver via terminal con los siguientes comandos:
+   (Elegir opcion 8 ubunutu 14 con x86 y x64 bits ok)
+	cd Downloads
+	tar -zxvf tmx-cups-2.0.3.0.tar.gz
+	cd tmx-cups
+	sudo ./install.sh
+
+3-Luego de haber conectado e instalado los driver, agregamos el printer por el sistema operativo, agredo el driver manual (busco marca epson y modelo el TM/BA Printer que es el driver que contiene el controlador instalado ok.
+Realizar una pagina de prueba de imperion y OK.
+
+4- Para el programa kollector, configurar en printer en el firefox web cuando salga la ventada de imprimir con los siguientes aprametros:
+
+paper size 80*200mm aprox
+quitar el header and footer (BLANK) para que no salga nada de eso en el ticket.
+
+5- probar ok. ted.

@@ -1,0 +1,140 @@
+
+<body onload="inicio()">
+
+
+<h3 id="txt"> Fecha y Hora </h3>
+
+<p style="display:none;" id="hora"><%= Time.now.strftime("%H-%M-%S").split("-")[0].to_s%> </p>
+<p style="display:none;" id="minuto"> <%= Time.now.strftime("%H-%M-%S").split("-")[1].to_i %> </p>
+<p style="display:none;" id="segundo"> <%= Time.now.strftime("%H-%M-%S").split("-")[2] %> </p>
+<p style="display:none;" id="fecha"> <%=  Time.now.strftime("%d/%m/%y") %> </p>
+
+
+
+<script>
+//JS no puede acceder directamente a las sesions server side, usaremos equiquetas <P> para leeer los valores ok ted.
+
+ //var hhh = parseInt(document.getElementById("hora").value, 10);
+
+
+
+
+function startTime() {
+
+var sec = parseInt(sessionStorage.getItem("segundos"), 10 );
+var mod_sec = 0;
+
+var min = parseInt(sessionStorage.getItem("minutos"), 10 );
+var mod_min = 0;
+
+var hor = parseInt(sessionStorage.getItem("horas"), 10 );
+//var mod_hor = 0;
+
+var flag_hora = 0;
+var sufijo = "";
+var hor_visual = 0;
+var st_fecha = sessionStorage.getItem("fecha") //String con la fecha para visualizar en javascript. puede asignarle valor de de session[:lafecha...]
+
+
+    sec = sec + 1 ;
+    
+    if (sec > 172800){
+       sec =0; // 48hrs.contando. Evitar algun overflow.
+    }
+    
+    if (min > 2880){
+       min =0; // 2880min = 48hrs.contando. Evitar algun overflow.
+    }
+    
+    sessionStorage.setItem("segundos", sec);
+    mod_sec = sec % 60;
+    
+    if (mod_sec == 0){
+    	min = min + 1 ;
+    }
+    
+    sessionStorage.setItem("minutos", min);
+    mod_min = min % 60;
+    
+    if ( flag_hora == 1){
+        hor = hor + 1;
+        flag_hora =0;   
+     }
+    
+     if (mod_min == 59 && mod_sec == 59){
+    	flag_hora = 1;
+       }
+       
+	 sufijo = "am";
+     hor_visual = hor; //para mostrar en la etiqueta <p></p>
+     
+     if ( hor > 11 ){
+         sufijo = "pm";
+         hor_visual = hor % 12;
+        }
+
+     
+     if (hor >= 24){
+         hor = 0;
+        }
+
+    sessionStorage.setItem("horas", hor);
+   // mod_hor = hor % 24;
+
+    var today = new Date();     // hora local del browser pc js.
+    var h = hor  //today.getHours();
+    var m = mod_min  //today.getMinutes();
+    var s = mod_sec; //today.getSeconds();
+	
+    
+  
+    
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('txt').innerHTML = "Fecha: " + st_fecha + "| Hora: " +  h + ":" + m + ":" + s + sufijo;
+    var t = setTimeout(startTime, 998);
+}
+
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+
+
+
+
+function inicio() {
+
+// var hhh = document.getElementById("hora").value;
+
+var hhh = parseInt(document.getElementById("hora").innerHTML);
+var mmm = parseInt(document.getElementById("minuto").innerHTML);
+var sss = parseInt(document.getElementById("segundo").innerHTML);
+
+var fecha_server = document.getElementById("fecha").innerHTML;
+//var mmm = document.getElementById("minuto").value;
+//var sss = document.getElementById("segundo").value;
+
+//var fecha_server = document.getElementById("fecha").value;
+
+//alert(mmm);
+
+sessionStorage.setItem("horas", hhh);
+sessionStorage.setItem("minutos", mmm);
+sessionStorage.setItem("segundos", sss);
+sessionStorage.setItem("fecha", fecha_server);
+
+   
+startTime();
+
+
+}
+
+
+
+
+
+</script>
+
+
+

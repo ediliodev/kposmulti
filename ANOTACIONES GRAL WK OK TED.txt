@@ -1,0 +1,23 @@
+revisar envio de creditos de 5 - 10 y pulsos justos ruleta para 25-50-100-200-500  pdte.
+revisar la partde de receptcion de debitos. tablas.
+
+probar general ruletas credit/debits/play multiple times.
+
+entrar a la seccion pot of gold: envio de creditos [pendiente / facor divisro], recibo y procesamiento de los debitos, etc..
+
+
+**************************
+NOTA: LAS CONFIGURACIONES VAN EN EL MASSSSTERRR ? 100PULSOS TO 1 PUSLE PER CREDIT. OJO TEST.
+TECLADO PS/2 
+CONFIGURACION DE 100 PULSOS A 1 X 1 PULSO RULETAS Y CONTADOR A?
+REPORTE DEBIT EN TABLA FRONTAL. INDEX.
+PROBAR RULETAS FULL, IN,PLAY,OUT. FIN.
+
+COGER LAS POG TEST.
+NSANCHEZ MIERCOLES??
+
+8AM
+TIPO DE LOS CAJJONES  OJO. !!
+SGS REPORTES
+PAYMENTS KLK.
+

@@ -1,0 +1,42 @@
+<%= form_with(model: transaccionest, local: true) do |form| %>
+  <% if transaccionest.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(transaccionest.errors.count, "error") %> prohibited this transaccionest from being saved:</h2>
+
+      <ul>
+      <% transaccionest.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :maquinat_id %>
+    <%= form.select :maquinat_id, Maquinat.order(:descripcion).collect{ |item|  [ " --> " + item.descripcion , item.id ] } %> 
+  </div>
+
+  <div class="field">
+    <%= form.label :tipotransaccion %>
+    <%= form.text_field :tipotransaccion, id: :transaccionest_tipotransaccion %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cantidad %>
+    <%= form.text_field :cantidad, id: :transaccionest_cantidad %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comando %>
+    <%= form.text_field :comando, id: :transaccionest_comando %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.text_field :status, id: :transaccionest_status %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
