@@ -1,5 +1,5 @@
 
-server '10.0.7.43', user: 'deploy', roles: %w{app db web}
+server '10.0.7.39', user: 'deploy', roles: %w{app db web}
 
 # server-based syntax
 # ======================
