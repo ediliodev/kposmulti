@@ -1,3 +1,13 @@
+
+require 'capistrano/rails'
+  require 'capistrano/passenger'
+
+    # If you are using rbenv add these lines:
+     require 'capistrano/rbenv'
+     set :rbenv_type, :user
+     set :rbenv_ruby, '2.6.5'
+
+
 # Load DSL and set up stages
 require "capistrano/setup"
 
@@ -16,13 +26,6 @@ require "capistrano/scm/git"
 install_plugin Capistrano::SCM::Git
 
 
-require 'capistrano/rails'
-    require 'capistrano/passenger'
-
-    # If you are using rbenv add these lines:
-     require 'capistrano/rbenv'
-     set :rbenv_type, :user
-     set :rbenv_ruby, '2.6.5'
 
 # Include tasks from other gems included in your Gemfile
 #
