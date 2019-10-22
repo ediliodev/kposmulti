@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  fecha: 2019-10-18
+  in: MyString
+  out: MyString
+  net: MyString
+
+two:
+  fecha: 2019-10-18
+  in: MyString
+  out: MyString
+  net: MyString

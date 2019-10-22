@@ -3,20 +3,24 @@
 
 	  <head>
 	    <title>Kollector</title>
-
+	    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 	    <%= csrf_meta_tags %>
 
 	    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
 	    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 
 	  </head>
-
-	  <body>
+<div align="center">
+	  <body style="background-color: #dedede;">
+	  	
 	    <%= yield %>   
 	  </body>
 
+
 	 <h4> <%= link_to 'inicio', root_path %> </h4>
 
+	
+</div>
 	
 
 

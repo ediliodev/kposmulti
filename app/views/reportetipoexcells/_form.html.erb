@@ -1,0 +1,37 @@
+<%= form_with(model: reportetipoexcell, local: true) do |form| %>
+  <% if reportetipoexcell.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(reportetipoexcell.errors.count, "error") %> prohibited this reportetipoexcell from being saved:</h2>
+
+      <ul>
+      <% reportetipoexcell.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :fecha %>
+    <%= form.date_select :fecha, id: :reportetipoexcell_fecha %>
+  </div>
+
+  <div class="field">
+    <%= form.label :in %>
+    <%= form.text_field :in, id: :reportetipoexcell_in %>
+  </div>
+
+  <div class="field">
+    <%= form.label :out %>
+    <%= form.text_field :out, id: :reportetipoexcell_out %>
+  </div>
+
+  <div class="field">
+    <%= form.label :net %>
+    <%= form.text_field :net, id: :reportetipoexcell_net %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

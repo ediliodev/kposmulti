@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :reportetipoexcells
+  resources :accesots
   resources :mixtransaccionests
   resources :reportets
   resources :postransaccionests

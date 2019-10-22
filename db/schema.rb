@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191003001823) do
+ActiveRecord::Schema.define(version: 20191020025614) do
+
+  create_table "accesots", force: :cascade do |t|
+    t.string "usuario"
+    t.string "tipoacceso"
+    t.datetime "fechayhora"
+    t.string "ip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "descripcion"
+  end
 
   create_table "localidadts", force: :cascade do |t|
     t.string "consorcio"
@@ -46,6 +56,15 @@ ActiveRecord::Schema.define(version: 20191003001823) do
   create_table "postransaccionests", force: :cascade do |t|
     t.string "cantidad"
     t.string "serial"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "reportetipoexcells", force: :cascade do |t|
+    t.date "fecha"
+    t.string "in"
+    t.string "out"
+    t.string "net"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -5,6 +5,9 @@ class ReportetsController < ApplicationController
   # GET /reportets.json
   def index
     #@reportets = Reportet.all
+    
+    @day1 = session[:fecha_venta_dia_1]
+    @day2 = session[:fecha_venta_dia_2]
 
  # @primero = ganadores.primero < 10 ? ("0" + ganadores.primero.to_s) : ganadores.primero.to_s
     session[:fecha_venta_dia_1].values[2] = session[:fecha_venta_dia_1].values[2].to_i < 10 ? (session[:fecha_venta_dia_1].values[2] = "0" + session[:fecha_venta_dia_1].values[2] ) : (session[:fecha_venta_dia_1].values[2])
@@ -43,8 +46,10 @@ class ReportetsController < ApplicationController
       redirect_to "/reportets/new", notice: "Debe elegir una fecha de inicio valida. Ej. favor verifiicar si el mes es de 30 o 31 dias." and return
     end
 
-    @dia2 = @dia2.to_date.tomorrow # + 1.day    #como en between simepre empieza al inicio del dia, o sea a la media noche, La fecha final le sumaremos un dia para que seal igual al final del dia elegido, que es igual al inicio del dia posterior al final deseado. O sea, desde inicio de A hasta inicio de C es igual a: Desde inicio de a hasta final de B. (Donde termina B empieza C) ok. Ted. Rails concole. ok.
+   # @dia2 = @dia2.to_date.tomorrow # OJO YA NO ES NECESARIO ESTO. OK. SI VAS A USAR BETWEEN TIMES EN LA GEMA BY_DAY, YA QUE ELLA SOLA AUTOMATICAMENTE ELIGE EL RANGO FINAL DEL DIA, EJ. SI ES EL DIA (1RO DE OCTUBRE) 2019-10-01   BETWENN HARA EL OFFSET DEL SEGUND DIA AUTOMATICO, ENTONCES SE DEBE DE PONER ASI Modelo.beetween_times("2019-10-01".to_date, "2019-10-01".to_date ) => del 01 ocubre a las 00:00:00 horas( + GMT si esta configurado Time Zone en rails, en nuestro caso si 4 horas, hasta el mismo 01 oct a las 23:59:59 + el GMT) ok ted. probar en Rails c
 
+
+    @dia1 = @dia1.to_date
 
     #@valor es ventas
     #Defino @objeto_array_ventas para no hacer dos consultas al ActiveRecord de @valor (sum) y de @cantidad_de_tickets_vendidos (count) ok ted.
@@ -61,10 +66,61 @@ class ReportetsController < ApplicationController
     #Tickets pendientes de pago son Todos los tickets ganadores de ese rango de fecha no pagados.sumatoria
   #  @cantidad_de_tickets_pendiente_de_pago = Ticketsganadorest.between_times(@dia1.to_date , @dia2 ).where(:ticket_id => Ticket.between_times(@dia1.to_date , @dia2 ).where(:user_id => current_user.id , :activo => "si", :ganador => "si", :pago => nil).ids).count
 
-@total_in =  Transaccionest.between_times(@dia1.to_date, @dia2).where(:tipotransaccion => "credito", :status => "ok").sum(:cantidad)
-@total_out =  Postransaccionest.between_times(@dia1.to_date, @dia2).sum(:cantidad)
+#loop para reporte resumido dia x dia like excell, (usaremos las mismas variables, solo haremos un loop con la logica de abajo. ok. ted. Esto para prueba generar reportes like nestor excell ok.)
+
+@veces = (@day2.values.join("-").to_date - @day1.values.join("-").to_date ).to_i  # devuelve un muero racional que dividido da un numero entero correspondiente a la cantidad de dias de la resta realizada.
+
+# @veces  contiene la cantidad de dias que hay entre el rango de fecha seleccionado. Esto para sacar el reporte diaxdia. ok.
+
+#@veces.times do |dia|
+#  @total_in =  Transaccionest.between_times(@dia1.to_date, @dia2 + dia.to_i).where(:tipotransaccion => "credito", :status => "ok").sum(:cantidad)
+#  @total_out =  Postransaccionest.between_times(@dia1.to_date, @dia2).sum(:cantidad)
+#
+#  @total_net = @total_in.to_i - @total_out.to_i
+#
+#end
+
+
+# Me insteresa limpiar la tabla de reportes rapidamente, uso delete en ves de destroy porque obvia el dependent destroy model relations. ojo usar con responsabilidad. ok. este modelo no tiene dependencia alga de otro. ok.
+@limpiar_tabla_reporte = Reportetipoexcell.delete_all #  Returns the number of rows affected.  link: https://apidock.com/rails/ActiveRecord/Base/delete_all/class
+
+if (  (@veces > 1)  && ( session[:reporte].to_s != "supervisor_ok") && (session[:reporte].to_s != "admin_ok") )
+      redirect_to "/transaccionests/new", notice: "Puedes consultar ventas del dia actual y del anterior, para otro tipo de reportes favor contactar a su supervisor." and return  
+
+  #render "klk"
+#  http_basic_authenticate_with name: "ventas", password: "456456", except: :index
+
+end
+
+(@veces + 1).times do |offset| # para incluir el ultimo dia en la consulta ej. 1-18 oct solo salen 17 dias, el 18avo dia se suma en el loop ara que lo corra al final ok ted.
+#Reciclo esta parte del codigo de abajo, esto solo para provecharlo y utilizar la logica para implementarla en el reporter anidado del reporte excell. ok. ted.
+  @total_in =  Transaccionest.between_times(@dia1.to_date + offset, (@dia1.to_date + offset)).where(:tipotransaccion => "credito", :status => "ok").sum(:cantidad)
+  @total_out =  Postransaccionest.between_times(@dia1.to_date + offset,( @dia1.to_date + offset.days) ).sum(:cantidad)
+  @total_net = @total_in.to_i - @total_out.to_i
+
+  @entrada_objeto = Reportetipoexcell.new
+  @entrada_objeto.fecha = @dia1.to_date + offset
+  @entrada_objeto.in = @total_in
+  @entrada_objeto.out = @total_out
+  @entrada_objeto.net = @total_net
+  @entrada_objeto.save
+
+end
+@veces +=1 # esto para ell viwe solamente del counter 0..veces ok ted. no altera el ciclo de arriba ok.
+
+@reporte_tipo_excell = Reportetipoexcell.all # Seleccion todos los valores dia x dia del reporte tipo excell. Esto para ser mostrado en la vista.
+
+
+
+@total_in =  Transaccionest.between_times((@dia1.to_date ), (@dia2.to_date )).where(:tipotransaccion => "credito", :status => "ok").sum(:cantidad)
+@total_out =  Postransaccionest.between_times((@dia1.to_date), (@dia2.to_date)).sum(:cantidad)
 
 @total_net = @total_in.to_i - @total_out.to_i
+
+@d1 = @dia1
+@d2 = @dia2
+
+@dia2 = @dia2.to_date # no borrar esto para setear formato de esta variable al tipo to_date para la logica de abajo en adelante y no tener que modificarla una a una debajo. ok. ted.
 
 # Transaccionest id: 44, 
 # maquinat_id: 1, 
@@ -124,6 +180,35 @@ session[:fecha_venta_detalladaxmaquina_dia_2] =  @dia2        # Esto para llevar
   # POST /reportets
   # POST /reportets.json
   def create
+     #session[:klk] = params.require(:reportet).permit(:password).values[0]
+    @pwd_sup = params.require(:reportet).permit(:password).values[0].to_s
+    if @pwd_sup == "abc65535"
+      session[:reporte] = "supervisor_ok"
+      session[:klk] = @pwd_sup
+      @accesot = Accesot.new
+      @accesot.usuario = "supervisor"
+      @accesot.tipoacceso = "login"
+      @accesot.fechayhora = Time.now
+      @accesot.ip = request.env['action_dispatch.remote_ip'].to_s # registro la ip desde donde se hace el request. ok.
+      @accesot.descripcion = "Login consulta reporte de ventas"
+      @accesot.save
+    end
+
+
+    if @pwd_sup == "64738"
+      session[:reporte] = "admin_ok"
+       session[:klk] =  session[:reporte] #@pwd_sup
+       @accesot = Accesot.new
+       @accesot.usuario = "admin"
+       @accesot.tipoacceso = "login"
+       @accesot.fechayhora = Time.now
+       @accesot.ip = request.env['action_dispatch.remote_ip'].to_s # registro la ip desde donde se hace el request. ok.
+       @accesot.descripcion = "Login consulta reporte de ventas"
+       @accesot.save
+    end
+
+    
+
     @fecha1 = params.require(:reportet).permit(:desde) 
     @fecha2 = params.require(:reportet).permit(:hasta) 
     session[:fecha_venta_dia_1] = @fecha1
@@ -163,179 +248,9 @@ session[:fecha_venta_detalladaxmaquina_dia_2] =  @dia2        # Esto para llevar
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def reportet_params
-      params.require(:reportet).permit(:desde, :hasta)
+      params.require(:reportet).permit(:desde, :hasta, :password)
     end
 end
 
 
-
-#*********************************##
-
-class MenuposrventaxfechatsController < ApplicationController
-
-
-  def index
-    # @primero = ganadores.primero < 10 ? ("0" + ganadores.primero.to_s) : ganadores.primero.to_s
-    session[:fecha_venta_dia_1].values[2] = session[:fecha_venta_dia_1].values[2].to_i < 10 ? (session[:fecha_venta_dia_1].values[2] = "0" + session[:fecha_venta_dia_1].values[2] ) : (session[:fecha_venta_dia_1].values[2])
-    session[:fecha_venta_dia_2].values[2] = session[:fecha_venta_dia_2].values[2].to_i < 10 ? (session[:fecha_venta_dia_2].values[2] = "0" + session[:fecha_venta_dia_2].values[2] ) : (session[:fecha_venta_dia_2].values[2])
-
-    @dia1 = session[:fecha_venta_dia_1].values.reverse.join("-") # hash.values retorna array. para la consulta de by_day(fehca en ingles yyyy-mm-dd)    
-    @dia2 = session[:fecha_venta_dia_2].values.reverse.join("-")
-
-    # lo sigeuinte es para evitar que el 31-10-2018 sea mayor que el 01-11-2018 en la comparacion de fecha.to_i (agregar 0 deciumal que falta en noviembre)
-    #@dia1 => "2018-10-31" 
-    @day = @dia2.split("-")[2].to_i < 10 ? "0"+@dia2.split("-")[2] : @dia2.split("-")[2]
-    ymd = @dia2.split("-")
-    ymd[2] = @day
-    @dia2 = ymd.join("-")
-
-    # Lo mismo pada dia1 porque tambien tiene el mismo error. 5 => 05 ok.
-    @day = @dia1.split("-")[2].to_i < 10 ? "0"+@dia1.split("-")[2] : @dia1.split("-")[2]
-    ymd = @dia1.split("-")
-    ymd[2] = @day
-    @dia1 = ymd.join("-")
-
-
-    if @dia1.split("-").join("").to_i > @dia2.split("-").join("").to_i
-       redirect_to "/menuposrventaxfechats/new", notice: "Fecha final debe se mayor a la fecha de inicio." and return
-    end
-
-    y, m, d = @dia2.to_s.split("-")
-
-    if not (Date.valid_date? y.to_i, m.to_i, d.to_i) # sacado de link: https://stackoverflow.com/questions/2955830/how-to-check-if-a-string-is-a-valid-date
-      redirect_to "/menuposrventaxfechats/new", notice: "Debe elegir una fecha final valida. Ej. favor verifiicar si el mes es de 30 o 31 dias." and return
-    end
-
-    y, m, d = @dia1.to_s.split("-")
-    
-    if not (Date.valid_date? y.to_i, m.to_i, d.to_i) # sacado de link: https://stackoverflow.com/questions/2955830/how-to-check-if-a-string-is-a-valid-date
-      redirect_to "/menuposrventaxfechats/new", notice: "Debe elegir una fecha de inicio valida. Ej. favor verifiicar si el mes es de 30 o 31 dias." and return
-    end
-
-    @dia2 = @dia2.to_date.tomorrow # + 1.day    #como en between simepre empieza al inicio del dia, o sea a la media noche, La fecha final le sumaremos un dia para que seal igual al final del dia elegido, que es igual al inicio del dia posterior al final deseado. O sea, desde inicio de A hasta inicio de C es igual a: Desde inicio de a hasta final de B. (Donde termina B empieza C) ok. Ted. Rails concole. ok.
-
-
-    #@valor es ventas
-    #Defino @objeto_array_ventas para no hacer dos consultas al ActiveRecord de @valor (sum) y de @cantidad_de_tickets_vendidos (count) ok ted.
-    @objeto_array_ventas = Jugadalot.between_times(@dia1.to_date , @dia2 ).where(:ticket_id => Ticket.between_times(@dia1.to_date , @dia2 ).where(:user_id => current_user.id , :activo => "si").ids )
-   
-    @valor = @objeto_array_ventas.sum(:monto) 
-    @cantidad_de_tickets_vendidos = @objeto_array_ventas.count
-
-    @ganadores_cuadre = Ticketsganadorest.between_times(@dia1.to_date , @dia2).where(:sucursal => current_user.email.split('@')[0]).sum(:montoacobrar)
-
-    #Tickets pendientes de pago son Todos los tickets ganadores de ese rango de fecha no pagados.sumatoria
-    @cantidad_de_tickets_pendiente_de_pago = Ticketsganadorest.between_times(@dia1.to_date , @dia2 ).where(:ticket_id => Ticket.between_times(@dia1.to_date , @dia2 ).where(:user_id => current_user.id , :activo => "si", :ganador => "si", :pago => nil).ids).count
-
-    @dia1 = session[:fecha_venta_dia_1].values.join("-") # para el show dd-mm-aaaa
-    @dia2 = session[:fecha_venta_dia_2].values.join("-") # para el show dd-mm-aaaa
-
-   # session[:fecha_venta_dia] = nil
-    
-    @st = ""
-    @font = "|2C" # Tamanio de las letras.
-
-    @data = "" # Hacer un espacion para la separacion del titulo. Estetica del reporte. ok ted.
-    @st += "printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "  + %Q{"#{@font}"} + " + " +  %Q{ " #{@data}"} + " + LF);"
-
-    @data = "Reporte de Venta:" 
-    @st += "printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "  + %Q{"#{@font}"} + " + " +  %Q{ " #{@data}"} + " + LF);"
-
-    @data = "" # Hacer un espacion para la separacion del titulo. Estetica del reporte. ok ted.
-    @st += "printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "  + %Q{"#{@font}"} + " + " +  %Q{ " #{@data}"} + " + LF);"
-
-    @dia1 = session[:fecha_venta_dia_1].values.join("-")
-    @dia2 = session[:fecha_venta_dia_2].values.join("-")
-
-    @data = "Desde: " + @dia1.to_s # aqui tiene este valor: @dia = session[:fecha_venta_dia].values.join("-")
-    @st += "printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "  + %Q{"#{@font}"} + " + " +  %Q{ " #{@data}"} + " + LF);"
-    
-
-    @data = "Hasta: " + @dia2.to_s # aqui tiene este valor: @dia = session[:fecha_venta_dia].values.join("-")
-    @st += "printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "  + %Q{"#{@font}"} + " + " +  %Q{ " #{@data}"} + " + LF);"
-    
-
-    @data = "Sucursal: " + current_user.email.split("@")[0].to_s
-    @st += "printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "  + %Q{"#{@font}"} + " + " +  %Q{ " #{@data}"} + " + LF);"
-    
-    
-    #@data = "Venta: $" + @valor.to_s # number_to_currency(@valor, :unit => "", :delimiter => ",", :precision => 0, :separator => ".")
-    
-    @data = "Venta: $" + ActionController::Base.helpers.number_to_currency(@valor.to_s, :unit => "", :delimiter => ",", :precision => 0, :separator => ".")
-    @st += "printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "  + %Q{"#{@font}"} + " + " +  %Q{ " #{@data}"} + " + LF);"
-
-    @data = "" # Hacer un espacion para la separacion del titulo. Estetica del reporte. ok ted.
-    @st += "printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "  + %Q{"#{@font}"} + " + " +  %Q{ " #{@data}"} + " + LF);"
-
-    @font = "|1C"
-    @data = "Consultado el: " + Time.now.strftime("%d/%m/%Y (%H:%M:%S)").to_s 
-    @st += "printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "  + %Q{"#{@font}"} + " + " +  %Q{ " #{@data}"} + " + LF);"
-
-    @data = "" # Hacer un espacion para la separacion del titulo. Estetica del reporte. ok ted.
-    @st += "printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "  + %Q{"#{@font}"} + " + " +  %Q{ " #{@data}"} + " + LF);"
-
-    session[:fecha_venta_dia_1] = nil # Limpio la variable para evitar cookie oversize en el cliente.
-    session[:fecha_venta_dia_2] = nil # Limpio la variable para evitar cookie oversize en el cliente.
-  
-    
-    # Gererar cadena de impresion de este cuadre para version impresion movil:
-
-
-                       # @st_movil = ""
-
-                        @st_movil =   "CUADRE DE VENTAS"+ "@@"                        
-                        @st_movil +=  "Desde: " +  @dia1.to_s  + "@@"
-                        @st_movil +=  "Hasta: " +  @dia2.to_s  + "@@"
-                        @st_movil +=  "Sucursal: " + current_user.email.split("@")[0].to_s + "@@"
-                        @st_movil += "@@"
-                        @st_movil +=  "Total Ventas: $" + ActionController::Base.helpers.number_to_currency(@valor, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") + "@@"
-                        @st_movil +=  "[" + @cantidad_de_tickets_vendidos.to_s + " tickets]" + "@@"
-                        @st_movil +=  "Total Ganadores: $" +  ActionController::Base.helpers.number_to_currency(@ganadores_cuadre, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") + "@@"
-                        @st_movil +=  "Pdte.xPagar(tk): $" +  ActionController::Base.helpers.number_to_currency(@cantidad_de_tickets_pendiente_de_pago, :unit => "", :delimiter => ",", :precision => 0, :separator => ".")  + "@@"
-                        @st_movil += "@@"
-                        @st_movil +=  "BALACE TOTAL: $" +  ActionController::Base.helpers.number_to_currency((@valor.to_i - @ganadores_cuadre.to_i), :unit => "", :delimiter => ",", :precision => 0, :separator => ".")  + "@@"
-                        @st_movil +=  "Impreso: " +  Time.now.strftime("%d/%m/%Y (%H:%M:%S)")  + "@@"
-                       
-
-                        #@id_valido_provisional_show_relleno_get_ted = Jugadalot.first.id 
-                        session[:st_movil] = @st_movil
-
-                        session[:esperar_ubicacion] = "si"
-                        # manejo y registro de ubucacion (session movil debe ser true, ok. entonces manda ubicacion gps el celular)
-
-  end
-
-
-  def show
-  end
-
-  def new
-    @menuposrventaxfechat = Menuposrventaxfechat.new
-  end
-
-  def edit
-  end
-
-  
-  def create
-    @fecha1 = params.require(:menuposrventaxfechat).permit(:desde) 
-    @fecha2 = params.require(:menuposrventaxfechat).permit(:hasta) 
-    session[:fecha_venta_dia_1] = @fecha1
-    session[:fecha_venta_dia_2] = @fecha2
-    redirect_to menuposrventaxfechats_path and return 
-  end
-
-  def update
-  end
-
-  def destroy
-  end
-
-private
-
-def menuposrventaxfechat_params
-      params.require(:menuposrventaxfechat).permit!
-end
-
-end
 

@@ -1,28 +1,34 @@
-<p id="notice"><%= notice %></p>
 
-<h1>Transaccionests</h1>
-<h2>Valor de serial: <%= @param_serial %> </h2>
+<% if @mostrar_vista_web_normal != true %>
+  
 
-<% if @maquina_segun_serial %>
-  <h2>Valor de Maquina identificada: <%= @maquina_segun_serial.descripcion %> </h2>
-<% end %>
+  <p id="notice"><%= notice %></p>
 
+  <h1>Transaccionests</h1>
+  <h2>Valor de serial: <%= @param_serial %> </h2>
 
-<% if @param_serial != nil  &&  @transaccion_actual_objeto_no_existe != true %>
-
-<h2>Valor del comando acutal: <%= @transaccion_actual_objeto.comando %> </h2> 
-
-
-<h2> <% @transaccion_actual_objeto.comando  %> </h2>
-
-<h3> <%= @transaccion_actual_objeto.created_at  %> - <%= Time.now %> </h3>
+  <% if @maquina_segun_serial %>
+    <h2>Valor de Maquina identificada: <%= @maquina_segun_serial.descripcion %> </h2>
+  <% end %>
 
 
+    <% if @param_serial != nil  &&  @transaccion_actual_objeto_no_existe != true %>
+
+    <h2>Valor del comando acutal: <%= @transaccion_actual_objeto.comando %> </h2> 
+
+
+    <h2> <% @transaccion_actual_objeto.comando  %> </h2>
+
+    <h3> <%= @transaccion_actual_objeto.created_at  %> - <%= Time.now %> </h3>
+
+    <%end%>
 
 <%end%>
 
-<% if @mostrar_vista_web_normal == true %>
 
+<% if @mostrar_vista_web_normal == true %>
+<p style="color: red">X no permitido. Incidente reportado!</p>
+<!-- Solo admin ok.
     <table>
       <thead>
         <tr>
@@ -54,5 +60,7 @@
     <br>
 
     <%= link_to 'New Transaccionest', new_transaccionest_path %>
+
+  -->
 
 <%end%>

@@ -1,0 +1,37 @@
+<%= form_with(model: accesot, local: true) do |form| %>
+  <% if accesot.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(accesot.errors.count, "error") %> prohibited this accesot from being saved:</h2>
+
+      <ul>
+      <% accesot.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :usuario %>
+    <%= form.text_field :usuario, id: :accesot_usuario %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tipoacceso %>
+    <%= form.text_field :tipoacceso, id: :accesot_tipoacceso %>
+  </div>
+
+  <div class="field">
+    <%= form.label :fechayhora %>
+    <%= form.datetime_select :fechayhora, id: :accesot_fechayhora %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ip %>
+    <%= form.text_field :ip, id: :accesot_ip %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

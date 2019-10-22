@@ -1,5 +1,13 @@
 
 <p id="notice"><%= notice %></p>
+<!--<p>dia1: <%= @d1 %> </p> -->
+<!--<p>dia2: <%= @d2 %> </p> -->
+
+
+<% session[:klk]= "blah" #reseteo valor ok %>
+<% session[:reporte]= "blah" #reseteo valor ok.%>
+
+
 
 <h1 style="color:blue;">Cuadre de ventas</h1>
 <h2>Desde:  <%= @dia1.to_s %> </h2>
@@ -15,7 +23,7 @@
 
 <h2 style="color:blue;" >Balance Total: $ <%= number_to_currency(( @total_net ), :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %> </h2>
 
-
+<!-- <p><%= @veces %></p> -->
 
 <button class="button" type="button" onclick="PrintElem('div_a_imprimir')" style="color:white;background-color:blue; height:30px;">  Imprimir  </button> 
 
@@ -28,6 +36,49 @@
 
 
  <% if @array_consultas_transacciones %> <!-- Esto para evitar error cuando sea nil en un rango de fecha posible. ok. -->
+
+
+
+<!-- Completivo - informativo only: -->
+
+
+
+<div id="div_informativo_no_de_impresion_ok" >
+
+   
+
+    <h3>Detallado x maquina:</h3>
+
+      <% @ids_maquinas_activas.each do |id_maquina|  %> 
+
+          <h3><%= Maquinat.find(id_maquina).descripcion %></h3>
+
+             <% @total_in_x_maquina = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "credito", :status => "ok").sum(:cantidad)  %>
+
+             <% @total_out_x_maquina = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "debito").sum(:cantidad)  %>
+
+             <% @total_net_x_maquina = @total_in_x_maquina.to_i - @total_out_x_maquina.to_i   %>
+
+          <p>IN: $ <%= number_to_currency(@total_in_x_maquina , :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %> | OUT: $ <%= number_to_currency(@total_out_x_maquina, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>   </p>
+          
+          <% @porciento = 0 %>
+          <% # Evitar error de division/0 ok. %>
+          <%if @total_in_x_maquina.to_i > 0 %>
+              <% @porciento = ( (@total_net_x_maquina.to_i / @total_in_x_maquina.to_i )*100 ).round%>
+          <%end%>
+
+          <p>NETO: $ <%= number_to_currency(@total_net_x_maquina, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>  ( <%= @porciento %> %)  </p>
+
+          <p>___________________</p>
+
+      <% end %>
+
+
+</div>
+
+
+
+
 
    <h3 id="conteo_reciente">Detalles de envios (creditos):</h3>
    
@@ -145,21 +196,58 @@
 
           <p>IN: $ <%= number_to_currency(@total_in , :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %> | OUT: $ <%= number_to_currency(@total_out, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>   </p>
           
-          <% @prociento = 0 %>
+          <% @porciento = 0 %>
           <% # Evitar error de division/0 ok. %>
           <%if @total_in.to_i > 0 %>
-              <% @prociento = ( (@total_net.to_i / @total_in.to_i )*100 ).round%>
+              <% @porciento = ( (@total_net.to_i / @total_in.to_i )*100 ).round%>
           <%end%>
 
-          <p>NETO: $ <%= number_to_currency(@total_net, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>  ( <%= @prociento %> %)  </p>
+          <p>NETO: $ <%= number_to_currency(@total_net, :unit => "", :delimiter => ",", :precision => 0, :separator => ".") %>  ( <%= @porciento %> %)  </p>
 
           <p>___________________</p>
 
       <% end %>
 
-    <p>Kollector V1.0</p>
+    <p>Kollector Systems</p>
 
 </div>
+
+
+ <h3>Reporte Tipo Excell:</h3>
+
+<% @report_total_in = @report_total_out = @report_total_net = 0 %>
+
+ <table>
+     <tr> <th>Fecha</th> <th>Total IN</th> <th>Total OUT</th> <th>NET</th><th>%</th></tr>
+     
+     <%@reporte_tipo_excell.each do |valor|%>
+          <% @porciento = 0 %>
+          <% # Evitar error de division/0 ok. %>
+          <%if valor.in.to_i > 0 %>
+              <% @porciento = ((valor.net.to_d / valor.in.to_d ) * 100 ).round%>
+          <%end%>
+      <% @report_total_in +=  valor.in.to_i %>
+      <% @report_total_out += valor.out.to_i %>
+      <% @report_total_net += valor.net.to_i %>
+
+
+             <tr> <td><%= valor.fecha %></td> <td><%= valor.in %></td> <td><%= valor.out %></td> <td><%= valor.net %></td><td>  <%= @porciento %>% </td>  </tr>
+           
+           <%end%>
+       
+
+     <% if @report_total_in > 0 %>
+              <%  @porciento = (( @report_total_net.to_f / @report_total_in.to_f) * 100).to_f.round(2) %>
+              <%else%>
+              <% @porciento = 0 %>
+      <%end%>
+
+
+
+       <tr> <td>TOTAL:</td> <td><%= @report_total_in %></td> <td><%= @report_total_out %></td> <td><%= @report_total_net %></td><td> <%= @porciento  %> %</td>  </tr>
+
+
+ </table>
 
 
 

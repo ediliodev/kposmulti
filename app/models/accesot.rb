@@ -1,0 +1,2 @@
+class Accesot < ApplicationRecord
+end

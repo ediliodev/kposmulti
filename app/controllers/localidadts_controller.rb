@@ -2,6 +2,7 @@ class LocalidadtsController < ApplicationController
   http_basic_authenticate_with name: "admin", password: "64738", except: :index
 
   before_action :set_localidadt, only: [:show, :edit, :update, :destroy]
+  after_action :registro_login_admin,  except: :index
 
   # GET /localidadts
   # GET /localidadts.json

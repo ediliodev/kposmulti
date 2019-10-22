@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Usuario:</strong>
+  <%= @accesot.usuario %>
+</p>
+
+<p>
+  <strong>Tipoacceso:</strong>
+  <%= @accesot.tipoacceso %>
+</p>
+
+<p>
+  <strong>Fechayhora:</strong>
+  <%= @accesot.fechayhora %>
+</p>
+
+<p>
+  <strong>Ip:</strong>
+  <%= @accesot.ip %>
+</p>
+
+<%= link_to 'Edit', edit_accesot_path(@accesot) %> |
+<%= link_to 'Back', accesots_path %>

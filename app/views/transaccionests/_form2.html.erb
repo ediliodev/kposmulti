@@ -13,7 +13,7 @@
 
   <div class="field">
     <% form.label "Maquina:" %>
-    <%="Maquina: "%>
+    <%="MAQUINA: "%>
     <%= form.select :maquinat_id, Maquinat.order(:descripcion).collect{ |item|  [ " --> " + item.descripcion , item.id ] } %> 
   </div>
 
@@ -24,7 +24,7 @@
 
   <div class="field">
     <% form.label :cantidad %>
-    <%="Cantidad: "%>
+    <%="CANTIDAD:"%>
     <%= form.text_field :cantidad, id: :transaccionest_cantidad, :readonly => true %>
   </div>
 
@@ -41,19 +41,19 @@
 
 
 <div class="klk">
-   <button class="button" type="button" onclick= cash_modifySend('05')>05</button> 
-   <button class="button" type="button" onclick= cash_modifySend(10)>10</button> 
-   <button class="button" type="button" onclick= cash_modifySend(25)>25</button> 
-   <button class="button" type="button" onclick= cash_modifySend(50)>50</button> 
-   <button class="button" type="button" onclick= cash_modifySend(100)>100</button> 
-   <button class="button" type="button" onclick= cash_modifySend(200)>200</button> 
-   <button class="button" type="button" onclick= cash_modifySend(500)>500</button> 
+   <button style="color:blue;" class="button" type="button" onclick= cash_modifySend('05')>05</button> 
+   <button style="color:blue;" class="button" type="button" onclick= cash_modifySend(10)>10</button> 
+   <button style="color:blue;" class="button" type="button" onclick= cash_modifySend(25)>25</button> 
+   <button style="color:blue;" class="button" type="button" onclick= cash_modifySend(50)>50</button> 
+   <button style="color:blue;" class="button" type="button" onclick= cash_modifySend(100)>100</button> 
+   <button style="color:blue;" class="button" type="button" onclick= cash_modifySend(200)>200</button> 
+   <button style="color:blue;" class="button" type="button" onclick= cash_modifySend(500)>500</button> 
 </div>
 
 </br>
 
   <div class="actions">
-     <button class="button" type="button" onclick= reset_modifySend()>x Reset</button>  
+     <button style="color:red;" class="button" type="button" onclick= reset_modifySend()>x Reset</button>  
     <%= form.submit "       Enviar ->      " %>
   </div>
 

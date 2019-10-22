@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Reportetipoexcells</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>In</th>
+      <th>Out</th>
+      <th>Net</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @reportetipoexcells.each do |reportetipoexcell| %>
+      <tr>
+        <td><%= reportetipoexcell.fecha %></td>
+        <td><%= reportetipoexcell.in %></td>
+        <td><%= reportetipoexcell.out %></td>
+        <td><%= reportetipoexcell.net %></td>
+        <td><%= link_to 'Show', reportetipoexcell %></td>
+        <td><%= link_to 'Edit', edit_reportetipoexcell_path(reportetipoexcell) %></td>
+        <td><%= link_to 'Destroy', reportetipoexcell, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Reportetipoexcell', new_reportetipoexcell_path %>

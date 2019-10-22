@@ -22,6 +22,10 @@
     <%= form.date_select :hasta, id: :reportet_hasta, :order => [:day, :month, :year] %>
   </div>
 
+  <div class="field">                       
+    <%= form.password_field :password, :value => "nada" %>
+  </div>
+
   <div class="actions">
     <%= form.submit "Consultar" %>
   </div>

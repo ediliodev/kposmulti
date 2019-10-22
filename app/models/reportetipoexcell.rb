@@ -1,0 +1,2 @@
+class Reportetipoexcell < ApplicationRecord
+end

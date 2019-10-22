@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Accesots</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Usuario</th>
+      <th>Tipoacceso</th>
+      <th>Fechayhora</th>
+      <th>Ip</th>
+      <th>Descripcion</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @accesots.each do |accesot| %>
+      <tr>
+        <td><%= accesot.usuario %></td>
+        <td><%= accesot.tipoacceso %></td>
+        <td><%= accesot.fechayhora %></td>
+        <td><%= accesot.ip %></td>
+        <td><%= accesot.descripcion %></td>
+        <td><%= link_to 'Show', accesot %></td>
+        <td><%= link_to 'Edit', edit_accesot_path(accesot) %></td>
+        <td><%= link_to 'Destroy', accesot, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

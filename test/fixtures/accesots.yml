@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  usuario: MyString
+  tipoacceso: MyString
+  fechayhora: 2019-10-16 18:54:49
+  ip: MyString
+
+two:
+  usuario: MyString
+  tipoacceso: MyString
+  fechayhora: 2019-10-16 18:54:49
+  ip: MyString
