@@ -53,9 +53,13 @@
 
           <h3><%= Maquinat.find(id_maquina).descripcion %></h3>
 
-             <% @total_in_x_maquina = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "credito", :status => "ok").sum(:cantidad)  %>
+<% #modificacion especial por el Strgin.su, error de porstres, esta ves de una mejor forma, usando map, ver este link: https://www.rubyguides.com/2018/10/ruby-map-method/  %>
+      
+t.map { |obj| obj.cantidad.to_i }.sum
 
-             <% @total_out_x_maquina = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "debito").sum(:cantidad)  %>
+             <% @total_in_x_maquina = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "credito", :status => "ok").map { |objeto| objeto.cantidad.to_i }.sum  %>
+
+             <% @total_out_x_maquina = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "debito").map { |objeto| objeto.cantidad.to_i }.sum  %>
 
              <% @total_net_x_maquina = @total_in_x_maquina.to_i - @total_out_x_maquina.to_i   %>
 
@@ -188,9 +192,9 @@
 
           <h3><%= Maquinat.find(id_maquina).descripcion %></h3>
 
-             <% @total_in = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "credito", :status => "ok").sum(:cantidad)  %>
+             <% @total_in = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "credito", :status => "ok").map { |objeto| objeto.cantidad.to_i }.sum  %>
 
-             <% @total_out = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "debito").sum(:cantidad)  %>
+             <% @total_out = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "debito").map { |objeto| objeto.cantidad.to_i }.sum %>
 
              <% @total_net = @total_in.to_i - @total_out.to_i   %>
 
