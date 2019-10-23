@@ -94,8 +94,26 @@ end
 
 (@veces + 1).times do |offset| # para incluir el ultimo dia en la consulta ej. 1-18 oct solo salen 17 dias, el 18avo dia se suma en el loop ara que lo corra al final ok ted.
 #Reciclo esta parte del codigo de abajo, esto solo para provecharlo y utilizar la logica para implementarla en el reporter anidado del reporte excell. ok. ted.
-  @total_in =  Transaccionest.between_times(@dia1.to_date + offset, (@dia1.to_date + offset)).where(:tipotransaccion => "credito", :status => "ok").sum(:cantidad)
-  @total_out =  Postransaccionest.between_times(@dia1.to_date + offset,( @dia1.to_date + offset.days) ).sum(:cantidad)
+  #@total_in =  Transaccionest.between_times(@dia1.to_date + offset, (@dia1.to_date + offset)).where(:tipotransaccion => "credito", :status => "ok").sum(:cantidad)
+  #@total_out =  Postransaccionest.between_times(@dia1.to_date + offset,( @dia1.to_date + offset.days) ).sum(:cantidad)
+  
+  #Suma Especial iterada para evitar el error por el postgres String.sum error en production ok ted.
+  @total_in = @total_out = 0
+
+  @total_in_especial =  Transaccionest.between_times(@dia1.to_date + offset, (@dia1.to_date + offset)).where(:tipotransaccion => "credito", :status => "ok")
+  @total_out_especial =  Postransaccionest.between_times(@dia1.to_date + offset,( @dia1.to_date + offset.days) )
+ 
+  @total_in_especial.each do |valor|
+    @total_in += valor.cantidad.to_i
+
+  end
+
+  @total_out_especial.each do |valor|
+    @total_out += valor.cantidad.to_i
+
+  end
+
+
   @total_net = @total_in.to_i - @total_out.to_i
 
   @entrada_objeto = Reportetipoexcell.new
@@ -112,8 +130,29 @@ end
 
 
 
-@total_in =  Transaccionest.between_times((@dia1.to_date ), (@dia2.to_date )).where(:tipotransaccion => "credito", :status => "ok").sum(:cantidad)
-@total_out =  Postransaccionest.between_times((@dia1.to_date), (@dia2.to_date)).sum(:cantidad)
+
+#@total_in =  Transaccionest.between_times((@dia1.to_date ), (@dia2.to_date )).where(:tipotransaccion => "credito", :status => "ok").sum(:cantidad)
+#@total_out =  Postransaccionest.between_times((@dia1.to_date), (@dia2.to_date)).sum(:cantidad)
+
+#Suma Especial otra vez ok, iterada para evitar el error por el postgres String.sum error en production ok ted.
+@total_in_especial =  Transaccionest.between_times((@dia1.to_date ), (@dia2.to_date )).where(:tipotransaccion => "credito", :status => "ok")
+@total_out_especial =  Postransaccionest.between_times((@dia1.to_date), (@dia2.to_date))
+
+@total_in = @total_out = 0
+
+
+@total_in_especial.each do |valor|
+    @total_in += valor.cantidad.to_i
+
+  end
+
+@total_out_especial.each do |valor|
+  @total_out += valor.cantidad.to_i
+
+end
+
+
+
 
 @total_net = @total_in.to_i - @total_out.to_i
 

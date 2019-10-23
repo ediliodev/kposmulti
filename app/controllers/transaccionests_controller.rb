@@ -111,13 +111,32 @@ class TransaccionestsController < ApplicationController
     @lastly_postransaccionests = Postransaccionest.today.last(10).reverse
     @kit_maquinats = Maquinat.where(:activa => "si")
     @kit_maquinats_verde = Maquinat.where("updated_at > ?", (Time.now - 30.seconds)).ids # where(:updated_at > ( (Time.now - 4.hours) - 300.seconds) ) 
-    @sucursal =  Localidadt.last.sucursal # Super Games & Sports # 01 ( La sucursal se registra detalla ok.)
+    @sucursal =  Localidadt.last.sucursal  # Super Games & Sports # 01 ( La sucursal se registra detalla ok.)
 
      #@neto_hoy = Transaccionest.all.sum(:cantidad).to_i / 100 # provisional, hay que agragar la gema by_day
  
      #CONSULTA RAPIDA DEL BALANCE ACTUAL DE HOY:
-     @total_in = Transaccionest.by_day(Date.today).where( :tipotransaccion => "credito", :status => "ok").sum(:cantidad)  
-     @total_out = Postransaccionest.by_day(Date.today).sum(:cantidad)  
+     #@total_in = Transaccionest.by_day(Date.today).where( :tipotransaccion => "credito", :status => "ok").sum(:cantidad)  
+      @total_in = 0
+    
+     #ajuste especial para postgres, evitar error en produccion que cantidad es un string en la bdatos y no lo esta muando directo como en sqlite. ok. ted.
+     @total_in_especial = Transaccionest.by_day(Date.today).where( :tipotransaccion => "credito", :status => "ok")  
+     
+     @total_in_especial.each do |valor|
+        @total_in += valor.cantidad.to_i # esto para poder sumar haciendo la consuta de cantidad (string),to_i en postgres porque no lo estaba sumando directo string.sum errror. ok ted.
+
+     end
+
+
+
+     #@total_out = Postransaccionest.by_day(Date.today).sum(:cantidad)  
+     @total_out = 0
+     @total_out_especial =  Postransaccionest.by_day(Date.today)
+     
+     @total_out_especial.each do |valor|
+        @total_out += valor.cantidad.to_i # esto para poder sumar haciendo la consuta de cantidad (string),to_i en postgres porque no lo estaba sumando directo string.sum errror. ok ted.
+
+     end
 
      @neto_hoy = @total_in.to_i - @total_out.to_i # PARA MOSTRAR LA VENTA DEL DIA ACTUAL EN LA PANTALLE PRINCIPAL OK.
 
