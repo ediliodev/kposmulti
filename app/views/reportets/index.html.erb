@@ -55,7 +55,6 @@
 
 <% #modificacion especial por el Strgin.su, error de porstres, esta ves de una mejor forma, usando map, ver este link: https://www.rubyguides.com/2018/10/ruby-map-method/  %>
       
-t.map { |obj| obj.cantidad.to_i }.sum
 
              <% @total_in_x_maquina = Transaccionest.between_times(session[:fecha_venta_detalladaxmaquina_dia_1], session[:fecha_venta_detalladaxmaquina_dia_2]).where(:maquinat_id => id_maquina ,  :tipotransaccion => "credito", :status => "ok").map { |objeto| objeto.cantidad.to_i }.sum  %>
 
