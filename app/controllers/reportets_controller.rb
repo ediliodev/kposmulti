@@ -84,7 +84,8 @@ class ReportetsController < ApplicationController
 # Me insteresa limpiar la tabla de reportes rapidamente, uso delete en ves de destroy porque obvia el dependent destroy model relations. ojo usar con responsabilidad. ok. este modelo no tiene dependencia alga de otro. ok.
 @limpiar_tabla_reporte = Reportetipoexcell.delete_all #  Returns the number of rows affected.  link: https://apidock.com/rails/ActiveRecord/Base/delete_all/class
 
-if (  (@veces > 1)  && ( session[:reporte].to_s != "supervisor_ok") && (session[:reporte].to_s != "admin_ok") )
+# Evitar que hagan consultas pasadas con uno os dos dias de direrencia ej. del 01/10/2019 al 02/10/2019, y no podran si no es admin, porque Date.today lo tomo como referencia asi ok: ( (Date.today - @day1.values.join("-").to_date) > 1 ) 
+if (  ( (@veces > 1) || ( (Date.today - @day1.values.join("-").to_date) > 1 )  )  && ( session[:reporte].to_s != "supervisor_ok") && (session[:reporte].to_s != "admin_ok") )
       redirect_to "/transaccionests/new", notice: "Puedes consultar ventas del dia actual y del anterior, para otro tipo de reportes favor contactar a su supervisor." and return  
 
   #render "klk"
@@ -235,7 +236,7 @@ session[:fecha_venta_detalladaxmaquina_dia_2] =  @dia2        # Esto para llevar
 
 
     if @pwd_sup == "64738"
-      session[:reporte] = "admin_ok"
+       session[:reporte] = "admin_ok"
        session[:klk] =  session[:reporte] #@pwd_sup
        @accesot = Accesot.new
        @accesot.usuario = "admin"
