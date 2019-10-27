@@ -83,17 +83,19 @@
 
 
 
-   <h3 id="conteo_reciente">Detalles de envios (creditos):</h3>
-   
+  
    <div id="tabla_recientes" class="tabla_transacciones">
+
+     <h3 id="conteo_reciente">Detalles de envios (creditos):</h3>
+   
 
       <table>
           <thead>
             <tr>
               <th>Fecha</th>
-              <th>Maquina</th>
-              <th>TipoTx</th>
-              <th>Cantidad</th>  
+              <th>MQ.</th>
+              <th></th>
+              <th>Cant.</th>  
               <th>Status</th>
               <th colspan="3"></th>
             </tr>
@@ -103,8 +105,8 @@
             <% @array_consultas_transacciones.each do |transaccionest| %>
               <tr>
                 <td><%= transaccionest.created_at.to_s.split(" -")[0] %></td>
-                <td><%= transaccionest.maquinat.descripcion %></td>
-                <td><%= transaccionest.tipotransaccion.to_s %></td>
+                <td><%= transaccionest.maquinat.descripcion.split(" ").map { |x| "#{x[0]}" }.join() %></td> <!-- Eso abrevia asi: "1- Pot of Gold # 1" => "1PoG#1" ok ted. -->
+                <td><%= (transaccionest.tipotransaccion.to_s == "credito"? "+" : "-") %></td>
                 <td><%= transaccionest.cantidad %></td>
                 <td><%= transaccionest.status %></td>
                 
@@ -123,9 +125,9 @@
           <thead>
             <tr>
               <th>Fecha</th>
-              <th>Maquina</th>
-              <th>TipoTx</th>
-              <th>Cantidad</th>  
+              <th>MQ.</th>
+              <th></th>
+              <th>Cant.</th>  
               <th>Status</th>
               <th colspan="3"></th>
             </tr>
@@ -135,8 +137,8 @@
             <% @array_consultas_postransacciones.each do |postransaccionest| %>     
               <tr>
                 <td><%= postransaccionest.created_at.to_s.split(" -")[0] %></td>
-                <td><%= Maquinat.where(:serial => postransaccionest.serial).first.descripcion %></td>
-                <td>*debito*</td>
+                <td><%= Maquinat.where(:serial => postransaccionest.serial).first.descripcion.split(" ").map { |x| "#{x[0]}" }.join() %></td>
+                <td>-</td>
 
                 <%if postransaccionest.cantidad.nil?%>
                   <td> <%= "*" %> </td>
@@ -155,8 +157,10 @@
         </table>
 
     <% end %> <!-- end del if condition del postransaccionest ok-->
-
-    </div>
+    
+    </br> <!-- espacio -->
+    <p>Kollector Systems</p>
+  </div>
 
 
 <button class="button" type="button" onclick="PrintElemConTabla('div_a_imprimir')" style="color:white;background-color:blue; height:35px;">  Imprimir con Tabla  </button> 
