@@ -1,7 +1,7 @@
 Para instalar el printer epson TM-T20II en ubuntu 16.04 partimos del siguiente link:
 
 https://askubuntu.com/questions/1026572/installing-printer-driver-for-epson-tm-t20ii-on-ubuntu-16-04/1027048
-
+0- Descargar Programa
 1 -conectamos el printer con el cable USB
 2- Instalamos el driver via terminal con los siguientes comandos:
    (Elegir opcion 8 ubunutu 14 con x86 y x64 bits ok)
@@ -17,5 +17,8 @@ Realizar una pagina de prueba de imperion y OK.
 
 paper size 80*200mm aprox
 quitar el header and footer (BLANK) para que no salga nada de eso en el ticket.
+
+En "page setup" poner el zoom de 100% a 80% y papel en 82.5x2000mm fue el que mejor funciono last time tested. ok.
+Probar ajustes y variar segun conveniencias. ok. ted.
 
 5- probar ok. ted.
