@@ -26,3 +26,12 @@ PAYMENTS KLK.
 
 link: "https://stackoverflow.com/questions/4110866/ruby-on-rails-where-to-define-global-constants"
 
+
+
+<% @salida_systemmm = %x[set KLK=mister || export KLK] %>
+
+<p>Valor de ENV[KLK] es: <%=   ENV['KLK']  %>  </p>
+<h1> Valor de archi es: <%= begin IO.read("/home/ted/Desktop/workspace/kollector/public/a2.rb") rescue "" end %> </h1>
+
+<h1> KIKOO <%= Rails.configuration.x.colours.default %> </h1>
+	

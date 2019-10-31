@@ -12,15 +12,6 @@
 
 <h1 style="color:black;">- Kollector VIP Systems -</h1>
 
-<% @salida_systemmm = %x[set KLK=mister || export KLK] %>
-
-<p>Valor de ENV[KLK] es: <%=   ENV['KLK']  %>  </p>
-<h1> Valor de archi es: <%= begin IO.read("/home/ted/Desktop/workspace/kollector/public/a2.rb") rescue "" end %> </h1>
-
-<h1> KIKOO <%= Rails.configuration.x.colours.default %> </h1>
-	
-
-
 
 <h2> <%= render 'reloj'  %> </h2> 
 
