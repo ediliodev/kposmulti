@@ -21,3 +21,8 @@ TIPO DE LOS CAJJONES  OJO. !!
 SGS REPORTES
 PAYMENTS KLK.
 
+ user: klk
+  password: <%= Rails.configuration.x.colours.default %>
+
+link: "https://stackoverflow.com/questions/4110866/ruby-on-rails-where-to-define-global-constants"
+

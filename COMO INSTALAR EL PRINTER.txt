@@ -22,3 +22,30 @@ En "page setup" poner el zoom de 100% a 80% y papel en 82.5x2000mm fue el que me
 Probar ajustes y variar segun conveniencias. ok. ted.
 
 5- probar ok. ted.
+
+
+--- Como Obsfucar Database.yml en production ted:
+1- Conectar por ssh al server produccion
+2- cambiar permisos y poner solo a root para que desde el user ventas no hagan cat al archivo. ok
+   asi:  sudo chmod 600 kollector/shared/config/database.yml 
+
+Y listo, Detalles debajo:
+
+deploy@kollector-pc:~$ ls
+Desktop    Downloads         kollector  Pictures  Templates
+Documents  examples.desktop  Music      Public    Videos
+
+deploy@kollector-pc:~$ ls -lha kollector/shared/config/*
+-rw-r--r-- 1 root root 185 oct 13 01:09 kollector/shared/config/database.yml
+-rw-r--r-- 1 root root 164 oct 13 01:11 kollector/shared/config/secrets.yml
+
+deploy@kollector-pc:~$ chmod 600 kollector/shared/config/database.yml 
+chmod: changing permissions of 'kollector/shared/config/database.yml': Operation not permitted
+
+deploy@kollector-pc:~$  sudo chmod 600 kollector/shared/config/database.yml 
+[sudo] password for deploy: 
+deploy@kollector-pc:~$ ls -lha kollector/shared/config/*
+-rw------- 1 root root 185 oct 13 01:09 kollector/shared/config/database.yml
+-rw-r--r-- 1 root root 164 oct 13 01:11 kollector/shared/config/secrets.yml
+
+LIsto, desde el usuario ventas no se puede hacer cat al archivo, ni leerlo. Solo faltaria encrytar la particion entera ubuntu (LVM o antes del install el SOperativo linux), etc..
